@@ -1,0 +1,13 @@
+@import '../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    max-width: 1200px;
+    max-height: 800px;
+  }
+}
+
+::ng-deep ngb-modal-backdrop {
+  z-index: unset !important;
+
+}

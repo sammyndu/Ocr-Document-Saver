@@ -1,0 +1,58 @@
+
+<div class="">
+  <nb-card>
+    <nb-card-header>Report</nb-card-header>
+    <nb-card-body>
+      <div class="col-md-12 mt-3 mb-3">
+
+        <table class="table table-sm table-bordered" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+          <thead>
+            <tr>
+              <th scope="col">Document Id</th>
+              <th scope="col">Document Name</th>
+              <th scope="col">Date Created</th>
+              <th scope="col">Date Modified</th>
+              <!-- <th scope="col">Action</th> -->
+            </tr>
+          </thead>
+          <tbody *ngIf="loading"> 
+            <tr style="text-align: center">
+              <td colspan="9">
+                <div style="text-align: center">
+                  <div class="spinner-border text-primary spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="docs.length > 0 && !loading">
+           <tr *ngFor="let doc of docs">
+            <td>{{ doc.documentId }}</td>
+            <td>{{ doc.documentName }}</td>
+            <td>{{ doc.dateSubmitted  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+            <td>{{ doc.dateModified  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+           
+            <!-- <td>
+              <button class="btn btn-outline-primary btn-sm me-3" (click)="updateDocument(doc.id)" aria-label="Example icon button with a filter list icon">
+                <nb-icon icon="edit-outline"></nb-icon>
+              </button>
+              <button class="btn btn-outline-danger btn-sm me-3" (click)="deleteDocument(doc.id)" >
+                <nb-icon icon="trash-2-outline"></nb-icon>
+              </button>
+              <a class="btn btn-outline-success btn-sm me-3" [href]="safeUrl(doc.documentContent)" [download]="doc.documentName+'.pdf'"  aria-label="Example icon button with a filter list icon">
+                <nb-icon icon="cloud-download-outline" status="success"></nb-icon>
+              </a>
+            </td> -->
+           </tr>
+          </tbody>
+          <tbody *ngIf="docs.length < 1 && !loading">
+            <tr>
+             <td colspan="8" class="text-center">No Records Found</td>
+            </tr>
+           </tbody>
+      </table>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</div>

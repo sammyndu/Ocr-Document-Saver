@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h4 class="modal-title">Update Document</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h6>Are you sure you want to delete this document ( {{ documentInfo.documentName }} ) ?</h6>
+    </div>
+</div>
+</div>
+<div class="modal-footer">
+  <button [disabled]="submitting" type="submit" (click)="deleteDoc()" class="btn btn-outline-primary">
+    <span *ngIf="submitting">
+      <div class="spinner-border text-primary spinner-border-sm" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </span>
+    <span *ngIf="!submitting">Yes</span>
+  </button>
+  <!-- <button type="submit" class="btn btn-outline-primary" form="ngForm">Submit</button> -->
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">No</button>
+</div>

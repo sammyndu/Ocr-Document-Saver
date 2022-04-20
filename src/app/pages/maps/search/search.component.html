@@ -1,0 +1,31 @@
+<div class="offset-md-2 col-md-8">
+  <nb-card>
+    <nb-card-header>Scan form</nb-card-header>
+    <nb-card-body>
+      <form>
+        <div class="form-group">
+          <label for="SN" class="label">S/N</label>
+          <input type="text" #sn="ngModel" name="sn" [(ngModel)]="searchData.documentId" nbInput fullWidth id="SN" placeholder="SN">
+        </div>
+        <div class="form-group">
+          <label for="name" class="label">Name</label>
+          <input type="text" #name="ngModel" name="name" [(ngModel)]="searchData.documentName" nbInput fullWidth id="name" placeholder="Name">
+        </div>
+        <div class="form-group">
+          <label for="date" class="label">Date</label>
+          <br>
+          <input nbInput
+          id="date"
+          name="date"
+          #date="ngModel"
+          [(ngModel)]="searchData.date"
+               placeholder="Date"
+               [nbDatepicker]="formpicker">
+        <nb-datepicker #formpicker></nb-datepicker>
+        </div>
+       
+        <button type="submit" [nbSpinner]="loading" nbSpinnerStatus="light" nbButton [disabled]="disableSubmit()" (click)="search()" nbButton status="primary">Submit</button>
+      </form>
+    </nb-card-body>
+  </nb-card>
+  </div>

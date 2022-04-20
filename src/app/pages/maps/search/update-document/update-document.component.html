@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <h4 class="modal-title">Update Document</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <form class="col-md-6 offset-md-3 mb-5" id="ngForm" #documentForm="ngForm" (ngSubmit)="updateDocument(documentForm)">
+      
+        <!-- <div class="form-floating mb-3">
+          <input type="documentId" class="form-control" required
+          [ngClass]="{ 'is-invalid': documentForm.submitted && documentId.invalid }" name="id" #documentId="ngModel"  [(ngModel)]="documentInfo.documentId" id="documentId">
+          <label for="documentId">Document ID</label>
+        </div> -->
+        <div class="form-floating mb-3">
+          <input type="documentName" class="form-control" required
+          [ngClass]="{ 'is-invalid': documentForm.submitted && documentName.invalid }"
+           name="name" #documentName="ngModel"  [(ngModel)]="documentInfo.documentName" id="documentName">
+          <label for="documentName">Document Name</label>
+        </div>
+        <div class=" input-group mb-3">
+          <!-- <label  for="inputGroupFile01">Upload</label> -->
+          <input type="file" class="form-control"
+          id="documentFile" name="documentFile" [(ngModel)]="fileString" 
+          [ngClass]="{ 'is-invalid': documentForm.submitted && documentFile.invalid }"
+          #documentFile="ngModel" (change)="getFile($event)" accept=".pdf">
+          <small>Note: Submitting a new file will replace the existing file in the database</small>
+        </div>
+  
+        <button class="btn btn-primary" [disabled]="documentForm.invalid || submitting" type="submit">
+          <div *ngIf="submitting" class="spinner-border text-light spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          Submit form
+        </button>
+
+    </form>
+</div>
+</div>
+<div class="modal-footer">
+  <!-- <button [disabled]="submitting" type="submit" form="ngForm" class="btn btn-outline-primary">
+    <span *ngIf="submitting">
+      <div class="spinner-border text-light spinner-border-sm" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </span>
+    <span *ngIf="!submitting">Submit</span>
+  </button> -->
+  <!-- <button type="submit" class="btn btn-outline-primary" form="ngForm">Submit</button> -->
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Close</button>
+</div>

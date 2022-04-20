@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <div class="form-group">
+        <label for="exampleFormControlSelect2">Role</label>
+        <select [(ngModel)]="userObject.role" name="role" required class="form-control" id="exampleFormControlSelect2">
+          <option value="0">Admin</option>
+          <option value="1">Report</option>
+          <option value="2">Scan</option>
+          <option value="3">Search</option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" [nbSpinner]="loading" nbSpinnerStatus="success" nbButton class="btn btn-outline-dark" (click)="save()">Save</button>
+</div>
