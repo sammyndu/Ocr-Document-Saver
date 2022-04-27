@@ -34,8 +34,8 @@
       (click)="doOCR()"></button>
     <!-- <button class="btn btn-outline-info save" value="save" title="Save &amp; Upload"
       (click)="openModal(saveModalRef,'save')"></button> -->
-      <button class="btn btn-outline-info save" value="save" title="Save &amp; Upload"
-      (click)="save()"></button>
+      <!-- <button class="btn btn-outline-info save" value="save" title="Save &amp; Upload"
+      (click)="save()"></button> -->
   </div>
 </div>
 <ng-template tabindex="-1" #scannerModalRef role="dialog" aria-labelledby="acquireModalLabel" aria-hidden="true"
@@ -68,7 +68,7 @@
           </label>
         </div>
       </li>
-      <!-- <li *ngIf="!bWASM && showDevices" class="list-group-item">
+     <li *ngIf="!bWASM && showDevices" class="list-group-item">
         <div class="input-group-prepend">
           <label class="input-group-text" style="width: 18%;" for="device">Device</label>
           <select class="custom-select" style="width: 80%;" id="device" [(ngModel)]="deviceName"
@@ -78,7 +78,7 @@
           </select>
         </div>
       </li>
-      <li *ngIf="!bWASM" class="list-group-item">
+       <!-- <li *ngIf="!bWASM" class="list-group-item">
         <div class="input-group-prepend" style="display: flex;">
           <label class="input-group-text" style="width: 32%;margin-right: 2%;">
             <input type="checkbox" [(ngModel)]="scanOptions.IfShowUI" aria-label="Checkbox for ShowUI">&nbsp;&nbsp;Show

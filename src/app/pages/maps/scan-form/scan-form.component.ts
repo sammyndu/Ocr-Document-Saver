@@ -20,6 +20,8 @@ export class ScanFormComponent implements OnInit {
   docInfo =  new DocumentInfo(); 
 
   loading = false;
+  checkDocId = '';
+  loadCheckDocId = false;
 
   // bNoInstall = false;
   // bUseCameraViaDirectShow = false;
@@ -49,7 +51,7 @@ export class ScanFormComponent implements OnInit {
       this.docInfo.documentId = res.docSN;
       this.docInfo.documentName = res.docName;
       this.docInfo.documentContent = res.file;
-      console.log(res.file);
+      //console.log(res.file);
     });
   }
 
@@ -64,7 +66,19 @@ export class ScanFormComponent implements OnInit {
     });
   }
 
+  checkIfDocumentIdExists() {
+    this.loadCheckDocId = true;
+    this.docService.checkDocumentExists(this.docInfo.documentId).subscribe(res => {
+      this.loadCheckDocId = false;
+      this.checkDocId = res.content ? 'Document already Exists' :  '';
+       //this.toastService.showSuccess("Added", "Document added successfully");
+    }, err => {
+      this.loadCheckDocId = false;
+      this.toastService.showError("Error", "Something went wrong"); 
+    });
+  }
+
   disableSave() {
-    return !this.docInfo.documentId || !this.docInfo.documentName || !this.docInfo.documentContent;
+    return !this.docInfo.documentId || !this.docInfo.documentName || !this.docInfo.documentContent || this.checkDocId.length > 0;
   }
 }

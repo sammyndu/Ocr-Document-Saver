@@ -29,14 +29,14 @@ export class AuthService {
     const user = this.sessionService.getUserInfo();
     if(user.role != Role.Admin){
       if(user.role == Role.Search) {
-        this.router.navigate(['/maps/search']);
+        this.router.navigate(['/pages/maps/search']);
         return;
       } else if(user.role == Role.Report) {
         console.log('report')
         this.router.navigate(['/pages/maps/report']);
         return;
       }else if(user.role == Role.Scan) {
-        this.router.navigate(['/maps/scan-form']);
+        this.router.navigate(['/pages/maps/scan-form']);
         return;
       }
     }

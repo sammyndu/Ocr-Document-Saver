@@ -41,6 +41,10 @@ export class DocumentService {
         return this.http.get<ApiResponse<DocumentInfo>>(`${this.apiBaseUrl}/${id}`);
     }
 
+    checkDocumentExists(id: string)  {
+        return this.http.get<ApiResponse<boolean>>(`${this.apiBaseUrl}/CheckDocumentId/${id}`);
+    }
+
     updateDocument(id: number, data: DocumentInfo)  {
         return this.http.put<ApiResponse<DocumentInfo>>(`${this.apiBaseUrl}/${id}`, data);
     }

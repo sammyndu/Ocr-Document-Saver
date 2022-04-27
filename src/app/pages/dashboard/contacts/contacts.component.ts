@@ -18,6 +18,7 @@ import { ToastService } from '../../../services/toast.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { PasswordComponent } from './password/password.component';
+import { Scan } from '../../../models/scan.model';
 
 @Component({
   selector: 'ngx-contacts',
@@ -31,6 +32,8 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() users: User[];
   //@Input() blockedUsers: User[];
   @Input() logs: Log[];
+
+  scans: Scan[] = []; 
 
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective;
@@ -54,6 +57,7 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
       pagingType: 'full_numbers'
     };
 
+    
     //this.getUsers();
     //this.getDashboardData();
   }
@@ -61,6 +65,7 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
     if(changes) {
+      this.getScans()
       this.dtTrigger.next();
       this.dtTrigger2.next();
     }
@@ -77,6 +82,29 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
 
   getRole(value: number) {
     return Role[value];
+  }
+
+  getScans() {
+
+     this.logs.filter(x => x.action == "Add Scan").forEach(log => {
+
+      const scan = this.scans.find(x => x.date.toString().substring(0,10) == log.dateCreated.toString().substring(0,10) && x.username == log.username);
+      console.log(log.dateCreated.toString().substring(0,10));
+      console.log(scan?.date.toString().substring(0,10));
+        console.log(scan)
+      if(scan) {
+          scan.scans += 1;
+        }
+        else {
+          const newScan =  new Scan();
+          const logDate = new Date(log.dateCreated);
+          newScan.date = log.dateCreated;
+          newScan.username = log.username;
+          newScan.scans = 1;
+          this.scans.push(newScan);
+          console.log(this.scans)
+        }
+     });
   }
 
   getDashboardData() {

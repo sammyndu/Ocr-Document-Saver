@@ -394,26 +394,39 @@ export class ScannerComponent implements OnInit {
 		this.thumbnail.show();
 		// Remove the context menu which is still not functioning correctly.
 		this.DWObject.Viewer.off('imageRightClick');
-		this.DWObject.Viewer.on('pageAreaSelected', (nImageIndex, rect) => {
-      console.log(nImageIndex, rect);
-			if (rect.length > 0) {
-				this.clearMessage();
-				var currentRect = rect[rect.length - 1];
-				if (rect.length > this.zones.length + 1) {
-				  this.showMessage("Impossible Area selected!");
-				  return;
-				}
-				if(rect.length == 1)
-					this.zones = [];
-				if (this.zones.length + 1 === rect.length)
-				  this.zones.push({ x: currentRect.x, y: currentRect.y, width: currentRect.x + currentRect.width, height: currentRect.y + currentRect.height, index: nImageIndex });
-				else
-				  this.zones.splice(rect.length - 1, 1, { x: currentRect.x, y: currentRect.y, width: currentRect.x + currentRect.width, height: currentRect.y + currentRect.height, index: nImageIndex });
-			}
-		});
-      this.DWObject.Viewer.on('OnImageAreaDeSelected', () => {
-        this.clearMessage(); this.zones = [];
-      });
+    
+		// this.DWObject.Viewer.on('pageAreaSelected', (nImageIndex, rect) => {
+    //   console.log(nImageIndex, rect);
+		// 	if (rect.length > 0) {
+		// 		this.clearMessage();
+		// 		var currentRect = rect[rect.length - 1];
+		// 		if (rect.length > this.zones.length + 1) {
+		// 		  this.showMessage("Impossible Area selected!");
+		// 		  return;
+		// 		}
+		// 		if(rect.length == 1)
+		// 			this.zones = [];
+		// 		if (this.zones.length + 1 === rect.length){
+    //       console.log("zone 1");
+    //       this.zones.push(
+    //         { 
+    //           x: currentRect.x, 
+    //           y: currentRect.y, 
+    //           width: currentRect.x + currentRect.width, 
+    //           height: currentRect.y + currentRect.height, 
+    //           index: nImageIndex 
+    //         }
+    //       );
+          
+    //     }else{
+    //       console.log("zone 2");
+		// 		  this.zones.splice(rect.length - 1, 1, { x: currentRect.x, y: currentRect.y, width: currentRect.x + currentRect.width, height: currentRect.y + currentRect.height, index: nImageIndex });
+    //     }
+    //   }
+		// });
+      // this.DWObject.Viewer.on('OnImageAreaDeSelected', () => {
+      //   this.clearMessage(); this.zones = [];
+      // });
       this.bMobile ? this.DWObject.Viewer.cursor = 'pointer' : this.DWObject.Viewer.cursor = 'crosshair';
       this.DWObject.Viewer.showPageNumber = true;
       //this.DWObject.Viewer.off('imageRightClick');
@@ -629,12 +642,12 @@ export class ScannerComponent implements OnInit {
     }
   }
   acquire() {
-    console.log("1")
+    //console.log("1")
     if (this.dwtService.bWASM) {
       (<HTMLInputElement>document.getElementById(this.containerId + "-fileInput")).value = "";
       document.getElementById(this.containerId + "-fileInput").click();
     } else {
-      console.log("2");
+      //console.log("2");
       this.scan();
     }
   }
@@ -684,7 +697,7 @@ export class ScannerComponent implements OnInit {
     console.log(engine);
     if (engine === "Choose...") { engine = "Basic"; this.OCREngine = "Basic"; }
     if (engine === "Pro") {
-      console.log("tell");
+      //console.log("tell");
       this.showMessage("The Professional Engine is huge, please hold on while it downloads...");
       this.useOCRPro = true;
     } else {
@@ -757,12 +770,22 @@ export class ScannerComponent implements OnInit {
     if (!this.emptyBuffer)
       this.clearMessage();
     this.ocrResultString = "";
+    this.zones.push(
+      { 
+        x: 1201, 
+        y: 10, 
+        width: 1201 + 451, 
+        height: 10 + 276, 
+        index: 0 
+      }
+    );
     this.filterZones();
     let ocrOptions = this.ocrProOptions;
     // let ocrOptions = this.ocrOptions;
     // if (this.OCREngine === "Pro")
     //   ocrOptions = this.ocrProOptions;
     //   console.log(ocrOptions);
+
     this.dwtService.ocr(ocrOptions, this.zones)
       .then(
         res => {
@@ -782,7 +805,9 @@ export class ScannerComponent implements OnInit {
               this.ocrResultString = stringToShow.join(" "); 
               console.log(this.ocrResultString);
               const myRe = /\d+-\d+-\d+/;
-              const nameRe = /Mr\w?\s\w+\s\w+/;
+              
+              //const nameRe = /Mr\w?\s\w+\s\w+/;
+              const nameRe = /^(Mr|Ms|Mrs)?(\w+ )+\w+\s?/;
               const myArray = myRe.exec(this.ocrResultString);
               if(myArray != null) {
                 console.log(myArray[0]);
@@ -796,7 +821,7 @@ export class ScannerComponent implements OnInit {
               } else {
                 this.documentName = "";
               }
-
+              this.save();
               //console.log(myArray[0], this.ocrResultString.match(nameRe)[0]);
               break;
             case "1" /* Text PDF */:
@@ -1121,7 +1146,7 @@ export class ScannerComponent implements OnInit {
             .then(base64String => {
               this.saveResults.base64String.push(base64String);
               this.saveResults.base64ButtonText.push("Copy Base64 String");
-              console.log(base64String);
+              //console.log(base64String);
               this.documentBase64String = base64String;
               const result = {
                 docName: this.documentName,

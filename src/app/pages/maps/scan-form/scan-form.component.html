@@ -5,18 +5,19 @@
       <form>
         <div class="form-group">
           <label for="SN" class="label">S/N</label>
-          <input type="text" name="SN" [(ngModel)]="docInfo.documentId" nbInput fullWidth id="SN" placeholder="SN">
+          <input #sn="ngModel" (blur)="checkIfDocumentIdExists()" type="text" name="SN" [(ngModel)]="docInfo.documentId" nbInput fullWidth id="SN" placeholder="SN">
+          <span style="color: red">{{ checkDocId }}</span>
         </div>
         <div class="form-group">
           <label for="name" class="label">Name</label>
           <input type="text" name="name" [(ngModel)]="docInfo.documentName" nbInput fullWidth id="name" placeholder="Name">
         </div>
         <div class="form-group">
-          <!-- <label for="case" class="label">Case</label>
-          <input type="text" nbInput fullWidth id="case" placeholder="Case"> -->
-          <label>Choose a browser from this list:
-            <input list="browsers" class="form-control" [(ngModel)]="docInfo.case" name="myBrowser" /></label>
-            <datalist name="case" id="browsers">
+          <label for="case" class="label">Case</label>
+          <input type="text" name="case" nbInput [(ngModel)]="docInfo.case" fullWidth id="case" placeholder="Case">
+          <!-- <label>Choose a browser from this list:
+            <input multiple list="browsers" class="form-control" [(ngModel)]="docInfo.case" name="myBrowser" /></label>
+            <datalist  name="case" id="browsers">
               <option value="Fever (38 Degree Celsius)">
               <option value="cough">
               <option value="sore throat">
@@ -24,7 +25,7 @@
               <option value="chills">
               <option value="Nausea/Vomitting">
               <option value="diarrhea">
-            </datalist>
+            </datalist> -->
         </div>
         <button (click)="openScanner()" type="button" nbButton status="success">Scan</button>
         <div *ngIf="docInfo.documentContent">File added</div>

@@ -24,11 +24,11 @@ export class UserService {
 
   getUsers(): Observable<ApiResponse<User[]>> {
     //return new ServerDataSource(this.http, { endPoint: `${this.baseUrl}/users` });
-    return this.authHttp.get<ApiResponse<User[]>>(`${this.baseUrl}/users`);
+    return this.http.get<ApiResponse<User[]>>(`${this.baseUrl}/users`);
   }
 
   getUserLogs(): Observable<ApiResponse<Log[]>> {
-    return this.authHttp.get<ApiResponse<Log[]>>(`${this.baseUrl}/logs`);
+    return this.http.get<ApiResponse<Log[]>>(`${this.baseUrl}/logs`);
   }
 
   blockUser(id) {
