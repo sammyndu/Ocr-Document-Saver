@@ -37,6 +37,14 @@ export class DocumentService {
         return this.http.get<ApiResponse<DocumentInfoEntity[]>>(this.apiBaseUrl);
     }
 
+    getDocumentContent(id: number): Observable<ApiResponse<DocumentInfoEntity>> {
+        return this.http.get<ApiResponse<DocumentInfoEntity>>(`${this.apiBaseUrl}/GetDocumentContent/${id}`);
+    }
+
+    getNewDocuments(): Observable<ApiResponse<DocumentInfoEntity[]>> {
+        return this.http.get<ApiResponse<DocumentInfoEntity[]>>(`${this.apiBaseUrl}/NewReport`);
+    }
+
     getDocument(id: number)  {
         return this.http.get<ApiResponse<DocumentInfo>>(`${this.apiBaseUrl}/${id}`);
     }

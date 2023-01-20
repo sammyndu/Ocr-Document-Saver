@@ -42,7 +42,7 @@ export class PasswordComponent implements OnInit {
     this.loading = true;
     this.userService.changePassword(this.id, this.pass).subscribe(res => {
       this.loading = false;
-      this.toast.showSuccess('Success', "Role Updated Successfully");
+      this.toast.showSuccess('Success', "Password Updated Successfully");
       this.modal.close();
     }, err => {
       this.loading = false;

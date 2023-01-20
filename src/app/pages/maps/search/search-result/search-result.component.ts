@@ -41,11 +41,12 @@ export class SearchResultComponent implements OnInit {
     public modal: NgbActiveModal,
     private documentService: DocumentService,
     private toast: ToastService,
+    private docService: DocumentService,
     private sanitizer: DomSanitizer
   ) { }
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
-    this.getDocs();
+    //this.getDocs();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

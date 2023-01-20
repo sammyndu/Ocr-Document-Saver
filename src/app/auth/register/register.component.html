@@ -91,7 +91,7 @@
 
   <div class="form-group">
     <label for="exampleFormControlSelect2">Role</label>
-    <select required class="form-control" id="exampleFormControlSelect2">
+    <select required class="form-control" name="role" [(ngModel)]="signUp.role" id="exampleFormControlSelect2">
       <option value="0">Admin</option>
       <option value="1">Report</option>
       <option value="2">Scan</option>

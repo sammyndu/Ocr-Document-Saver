@@ -553,15 +553,26 @@ export class DwtService {
     //     bottom: 100,
     //   },
     // ]);
-
+    // if(isBase64){
+    //   this._DWObject.LoadImageFromBase64Binary(base64String, Dynamsoft.DWT.EnumDWT_ImageType.)
+    // }
+    console.log(files);
+    console.log(this.bWASM);
     return new Promise((res, rej) => {
       this._DWObject.Addon.PDF.SetConvertMode(Dynamsoft.DWT.EnumDWT_ConvertMode.CM_AUTO);
       this._DWObject.Addon.PDF.SetResolution(200);
-      if (this.bWASM && files.length > 0) {
+      if (this.bWASM && files?.length > 0) {
+        console.log('first')
+        for (let i = 0; i < files.length; i++) {
+          this._DWObject.LoadImageFromBinary(files[i], () => { res(true); }, (errCode, errString) => { rej(errString); })
+        }
+      } else if(files?.length > 0) {
+        console.log(files);
         for (let i = 0; i < files.length; i++) {
           this._DWObject.LoadImageFromBinary(files[i], () => { res(true); }, (errCode, errString) => { rej(errString); })
         }
       } else {
+        console.log('last')
         this._DWObject.IfShowFileDialog = true;
         this._DWObject.RegisterEvent("OnPostLoad", (
           directory: string,

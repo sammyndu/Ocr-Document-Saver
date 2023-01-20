@@ -13,7 +13,7 @@
               <th scope="col">Case</th>
               <th scope="col">Date Created</th>
               <th scope="col">Date Modified</th>
-              <!-- <th scope="col">Action</th> -->
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody *ngIf="loading"> 
@@ -35,17 +35,17 @@
             <td>{{ doc.dateSubmitted  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
             <td>{{ doc.dateModified  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
            
-            <!-- <td>
-              <button class="btn btn-outline-primary btn-sm me-3" (click)="updateDocument(doc.id)" aria-label="Example icon button with a filter list icon">
+            <td>
+              <!-- <button class="btn btn-outline-primary btn-sm me-3" (click)="updateDocument(doc.id)" aria-label="Example icon button with a filter list icon">
                 <nb-icon icon="edit-outline"></nb-icon>
               </button>
               <button class="btn btn-outline-danger btn-sm me-3" (click)="deleteDocument(doc.id)" >
                 <nb-icon icon="trash-2-outline"></nb-icon>
-              </button>
-              <a class="btn btn-outline-success btn-sm me-3" [href]="safeUrl(doc.documentContent)" [download]="doc.documentName+'.pdf'"  aria-label="Example icon button with a filter list icon">
+              </button> -->
+              <a class="btn btn-outline-success btn-sm me-3" (click)="getDocContent(doc.id)" aria-label="Example icon button with a filter list icon">
                 <nb-icon icon="cloud-download-outline" status="success"></nb-icon>
               </a>
-            </td> -->
+            </td>
            </tr>
           </tbody>
           <tbody *ngIf="docs.length < 1 && !loading">

@@ -84,12 +84,23 @@
               <th>Date</th>
             </tr>
           </thead>
-          <tbody >
-            <tr *ngFor="let scan of scans">
+          <tbody *ngIf="scans.length > 0 && !scanLoading" >
+            <tr *ngFor="let scan of scans; let i = index;">
               <!-- <td>{{ log.id }}</td> -->
-              <td>{{ scan.username }}</td>
+              <td><div class="user-scan-link" (click)="searchUserScans(i)">{{ scan.username }}</div></td>
               <td>{{ scan.scans }}</td>
               <td>{{ scan.date | date:"dd/MM/yyyy" }}</td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="scanLoading"> 
+            <tr style="text-align: center">
+              <td colspan="3">
+                <div style="text-align: center">
+                  <div class="spinner-border text-primary spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

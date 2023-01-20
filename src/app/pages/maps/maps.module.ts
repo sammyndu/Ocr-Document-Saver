@@ -18,6 +18,7 @@ import { ScannerComponent } from './scan-form/scanner/scanner.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { SafeurlPipe } from '../../services/safeurl.pipe';
 import { DataTablesModule } from 'angular-datatables';
+import { SoftDocumentComponent } from './soft-document/soft-document.component';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { DataTablesModule } from 'angular-datatables';
     CallbackPipe,
     SafeurlPipe,
     UpdateDocumentComponent,
-    DeleteDocumentComponent
+    DeleteDocumentComponent,
+    SoftDocumentComponent
   ],
   providers: [
     DocumentService

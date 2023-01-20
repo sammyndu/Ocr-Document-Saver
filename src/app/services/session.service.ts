@@ -22,7 +22,7 @@ export class SessionService {
 
   isAuthenticated(): boolean {
     const token = this.getAccessToken();
-
+    console.log(token);
     return token && !this.isTokenExpired(token);
   }
 

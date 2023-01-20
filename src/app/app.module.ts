@@ -29,6 +29,7 @@ import { AuthComponent } from './auth/auth.component';
 import { TokenInterceptor } from './services/token-interceptor.service';
 import { LoginGuard } from './services/guards/login-guard';
 import { LogoutGuard } from './services/guards/logout-guard';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, AuthComponent, RegisterComponent, ChangePasswordComponent],
@@ -53,6 +54,10 @@ import { LogoutGuard } from './services/guards/logout-guard';
   ],
   bootstrap: [AppComponent],
   providers: [
+    {
+      provide: LocationStrategy, 
+      useClass: HashLocationStrategy
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

@@ -9,6 +9,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/dashboard',
   },
   {
+    title: 'Add User',
+    icon: 'user-outline',
+    link: '/auth/register',
+  },
+  {
     title: 'Search',
     icon: 'search-outline',
     link: '/pages/maps/search',

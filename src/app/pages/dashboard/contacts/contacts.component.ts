@@ -19,6 +19,10 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { PasswordComponent } from './password/password.component';
 import { Scan } from '../../../models/scan.model';
+import { SearchDocument } from '../../../models/search-document.model';
+import { DocumentService } from '../../../services/document.service';
+import { DocumentInfoEntity } from '../../../models/document-info.model';
+import { SearchResultComponent } from '../../maps/search/search-result/search-result.component';
 
 @Component({
   selector: 'ngx-contacts',
@@ -33,12 +37,19 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
   //@Input() blockedUsers: User[];
   @Input() logs: Log[];
 
+  @Input() userScans: DocumentInfoEntity[];
+
   scans: Scan[] = []; 
+
+  searchData = new SearchDocument;
 
   @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective;
 
   loading = false;
+
+  scanLoading = false;
+
 
   isBlockedToolTip: boolean = false;
 
@@ -49,6 +60,7 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private userService: UserService,
+    private docService: DocumentService,
     private toast: ToastService) {}
 
   ngOnInit(): void {
@@ -65,7 +77,7 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
     if(changes) {
-      this.getScans()
+      this.getScans();
       this.dtTrigger.next();
       this.dtTrigger2.next();
     }
@@ -86,10 +98,10 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
 
   getScans() {
 
-     this.logs.filter(x => x.action == "Add Scan").forEach(log => {
-
-      const scan = this.scans.find(x => x.date.toString().substring(0,10) == log.dateCreated.toString().substring(0,10) && x.username == log.username);
-      console.log(log.dateCreated.toString().substring(0,10));
+    const scans = this.userScans;
+      scans.forEach(scanItem => {
+        const scan = this.scans.find(x => x.date.toString().substring(0,10) == scanItem.dateSubmitted.toString().substring(0,10) && x.username == scanItem.createdBy);
+      console.log(scanItem.dateSubmitted.toString().substring(0,10));
       console.log(scan?.date.toString().substring(0,10));
         console.log(scan)
       if(scan) {
@@ -97,14 +109,57 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
         }
         else {
           const newScan =  new Scan();
-          const logDate = new Date(log.dateCreated);
-          newScan.date = log.dateCreated;
-          newScan.username = log.username;
+          const logDate = new Date(scanItem.dateSubmitted);
+          newScan.date = scanItem.dateSubmitted;
+          newScan.username = scanItem.createdBy;
           newScan.scans = 1;
           this.scans.push(newScan);
+          this.scans = this.scans.filter(x => x.username);
           console.log(this.scans)
         }
-     });
+      })
+     
+
+    //this.searchData.
+    // this.scanLoading = true;
+    // this.docService.getDocuments().subscribe(res => {
+    //   this.scanLoading = false;
+      
+    // }, err => {
+    //   this.scanLoading = false;
+    //   this.toast.showError("Error", "could not fecth documents");
+    // })
+
+    //  this.logs.filter(x => x.action == "Add Scan").forEach(log => {
+
+    //   const scan = this.scans.find(x => x.date.toString().substring(0,10) == log.dateCreated.toString().substring(0,10) && x.username == log.username);
+    //   console.log(log.dateCreated.toString().substring(0,10));
+    //   console.log(scan?.date.toString().substring(0,10));
+    //     console.log(scan)
+    //   if(scan) {
+    //       scan.scans += 1;
+    //     }
+    //     else {
+    //       const newScan =  new Scan();
+    //       const logDate = new Date(log.dateCreated);
+    //       newScan.date = log.dateCreated;
+    //       newScan.username = log.username;
+    //       newScan.scans = 1;
+    //       this.scans.push(newScan);
+    //       console.log(this.scans)
+    //     }
+    //  });
+  }
+
+  searchUserScans(scanIndex : number) {
+    this.searchData.date =this.scans[scanIndex].date;
+    this.searchData.userName = this.scans[scanIndex].username;
+    this.docService.searchDocument(this.searchData).subscribe(res => {
+      const modalRef = this.modalService.open(SearchResultComponent, { size: 'lg' });
+
+      modalRef.componentInstance.title = 'Search Result';
+      modalRef.componentInstance.docs = res.content;
+    })
   }
 
   getDashboardData() {
@@ -113,6 +168,7 @@ export class ContactsComponent implements OnInit, OnChanges, OnDestroy {
       {
         userResponse: this.userService.getUsers(), 
         logsResponse: this.userService.getUserLogs(),
+        //scansresponse:  this.getScans()
       }).subscribe(({userResponse, logsResponse}) => {
         this.loading = false;
         this.users = userResponse.content;

@@ -51,6 +51,18 @@ export class ScanFormComponent implements OnInit {
       this.docInfo.documentId = res.docSN;
       this.docInfo.documentName = res.docName;
       this.docInfo.documentContent = res.file;
+      this.docInfo.formDate = new Date();
+      // if(res.docDate != '') {
+      //   var dateParts = res.docDate.split("/");
+
+      //   // month is 0-based, that's why we need dataParts[1] - 1
+      //   this.docInfo.formDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+      //   //this.docInfo.formDate = new Date(res.docDate);
+      // } else {
+      //   this.docInfo.formDate = new Date();
+      // }
+      //this.docInfo.formDate = res.docDate != '' ? new Date(res.docDate) : new Date();
       //console.log(res.file);
     });
   }

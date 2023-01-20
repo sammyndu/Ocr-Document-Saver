@@ -45,6 +45,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register(){
+    this.signUp.role = parseInt(this.signUp.role.toString());
     console.log(this.signUp);
     this.userService.register(this.signUp).subscribe(res => {
       this.toastService.showSuccess("Added", "User added successfully");

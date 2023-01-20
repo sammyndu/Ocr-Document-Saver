@@ -1,3 +1,4 @@
+import { DocumentInfoEntity } from './../../models/document-info.model';
 import {Component, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { NbThemeService } from '@nebular/theme';
@@ -7,6 +8,7 @@ import { SolarData } from '../../@core/data/solar';
 import { Log } from '../../models/log.model';
 import { Role } from '../../models/role.enum';
 import { User } from '../../models/user.model';
+import { DocumentService } from '../../services/document.service';
 import { SessionService } from '../../services/session.service';
 import { UserService } from '../../services/user.service';
 
@@ -82,6 +84,7 @@ export class DashboardComponent implements OnDestroy {
               private solarService: SolarData,
               private sessionService: SessionService,
               private router: Router,
+              private docService: DocumentService,
               private userService: UserService) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
@@ -99,7 +102,7 @@ export class DashboardComponent implements OnDestroy {
       if(user.role == Role.Search) {
         this.router.navigate(['/maps/search']);
       } else if(user.role == Role.Report) {
-        console.log('repirt')
+        console.log('report')
         this.router.navigate(['/pages/maps/report']);
       }else if(user.role == Role.Scan) {
         this.router.navigate(['/maps/scan-form']);
@@ -109,6 +112,7 @@ export class DashboardComponent implements OnDestroy {
 
   users: User[] = [];
   blockedUsers: User[] = [];
+  userScans: DocumentInfoEntity[] = [];
   logs: Log[] = [];
   
   dtOptions: DataTables.Settings = {};
@@ -138,10 +142,12 @@ export class DashboardComponent implements OnDestroy {
     forkJoin(
       {
         userResponse: this.userService.getUsers(), 
-        logsResponse: this.userService.getUserLogs()
-      }).subscribe(({userResponse, logsResponse}) => {
+        logsResponse: this.userService.getUserLogs(),
+        scansResponse: this.docService.getDocuments()
+      }).subscribe(({userResponse, logsResponse, scansResponse}) => {
         this.users = userResponse.content;
         this.logs = logsResponse.content;
+        this.userScans = scansResponse.content;
         this.dtTrigger.next();
         this.blockedUsers = this.users.filter(x => x.isBlocked);
         this.userCard.value = this.users.length;

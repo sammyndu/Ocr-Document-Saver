@@ -40,6 +40,7 @@ import { TrafficChartComponent } from './traffic/traffic-chart.component';
 import { FormsModule } from '@angular/forms';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { DataTablesModule } from 'angular-datatables';
+import { MapsModule } from '../maps/maps.module';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     NbTooltipModule,
     NbSpinnerModule,
+    MapsModule,
     NbDialogModule.forRoot(),
   ],
   declarations: [

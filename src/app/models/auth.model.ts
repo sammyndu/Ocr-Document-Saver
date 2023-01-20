@@ -7,7 +7,7 @@ export class Auth {
 }
 
 export class Register extends Auth {
-    role: Role;
+    role: number;
 }
 
 export class AuthResponse {

@@ -2,7 +2,7 @@
   <nb-card-header>{{ title }}</nb-card-header>
   <nb-card-body>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <h4 class="modal-title" id="modal-basic-title">Search</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -11,6 +11,7 @@
           <tr>
             <th scope="col">Document Id</th>
             <th scope="col">Document Name</th>
+            <th scope="col">Document Case</th>
             <th scope="col">Date Created</th>
             <th scope="col">Date Modified</th>
             <th scope="col">Action</th>
@@ -31,6 +32,7 @@
          <tr *ngFor="let doc of docs">
           <td>{{ doc.documentId }}</td>
           <td>{{ doc.documentName }}</td>
+          <td>{{ doc.case }}</td>
           <td>{{ doc.dateSubmitted  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
           <td>{{ doc.dateModified  | date:'yyyy-MM-dd HH:mm:ss'  }}</td>
          
@@ -38,9 +40,7 @@
             <button class="btn btn-outline-primary btn-sm me-3" (click)="updateDocument(doc.id)" aria-label="Example icon button with a filter list icon">
               <nb-icon icon="edit-outline"></nb-icon>
             </button>
-            <button class="btn btn-outline-danger btn-sm me-3" (click)="deleteDocument(doc.id)" >
-              <nb-icon icon="trash-2-outline"></nb-icon>
-            </button>
+            
             <a class="btn btn-outline-success btn-sm me-3" [href]="safeUrl(doc.documentContent)" [download]="doc.documentName+'.pdf'"  aria-label="Example icon button with a filter list icon">
               <nb-icon icon="cloud-download-outline" status="success"></nb-icon>
             </a>

@@ -4,6 +4,10 @@ export class DocumentInfo {
     documentName: string = '';
     documentContent: string = '';
     case: string = "";
+    createdBy: string = "";
+    dateSubmitted!: Date;
+    dateModified!: Date;
+    formDate!: Date;
 }
 
 export class DocumentInfoEntity {
@@ -14,4 +18,6 @@ export class DocumentInfoEntity {
     dateSubmitted!: Date;
     dateModified!: Date;
     case: string = "";
+    createdBy: string = "";
+    formDate!: Date;
 }

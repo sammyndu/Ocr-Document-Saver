@@ -15,8 +15,13 @@ export class RoleGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
         const user = this.sessionService.getUserInfo();
-        if(state.url == '/pages/maps/report') {
-            if(user.role == Role.Admin || user.role == Role.Report) {
+        //debugger;
+        if(!user) {
+            this.authService.redirectToLogin();
+            return false;
+        }
+        else if(state.url == '/pages/maps/report') {
+            if(user.role == Role.Admin || user.role == Role.Report || user.role == Role.Scan) {
                 return true;
             }
         }
@@ -32,6 +37,11 @@ export class RoleGuard implements CanActivate {
             }
         } 
         else if(state.url == '/pages/dashboard') {
+            if(user.role == Role.Admin) {
+                return true;
+            }
+        }
+        else if(state.url == '/auth/register') {
             if(user.role == Role.Admin) {
                 return true;
             }

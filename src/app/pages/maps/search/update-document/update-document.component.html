@@ -19,14 +19,25 @@
            name="name" #documentName="ngModel"  [(ngModel)]="documentInfo.documentName" id="documentName">
           <label for="documentName">Document Name</label>
         </div>
+
         <div class=" input-group mb-3">
-          <!-- <label  for="inputGroupFile01">Upload</label> -->
+
+          <button (click)="openScanner()" type="button" nbButton status="success">Scan</button>
+          <br>
+        <div *ngIf="fileUpdated">File updated</div>
+        <small>Note: Submitting a new file will replace the existing file in the database</small>
+
+        </div>
+        
+
+        <!-- <div class=" input-group mb-3">
+         
           <input type="file" class="form-control"
           id="documentFile" name="documentFile" [(ngModel)]="fileString" 
           [ngClass]="{ 'is-invalid': documentForm.submitted && documentFile.invalid }"
           #documentFile="ngModel" (change)="getFile($event)" accept=".pdf">
           <small>Note: Submitting a new file will replace the existing file in the database</small>
-        </div>
+        </div> -->
   
         <button class="btn btn-primary" [disabled]="documentForm.invalid || submitting" type="submit">
           <div *ngIf="submitting" class="spinner-border text-light spinner-border-sm" role="status">

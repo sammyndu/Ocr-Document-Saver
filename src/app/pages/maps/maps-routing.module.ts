@@ -10,6 +10,8 @@ import { SearchMapComponent } from './search-map/search-map.component';
 import { MapComponent } from './search-map/map/map.component';
 import { SearchComponent } from './search/search.component';
 import { ReportComponent } from './report/report.component';
+import { NewReportComponent } from './new-report/new-report.component';
+import { SoftDocumentComponent } from './soft-document/soft-document.component';
 
 const routes: Routes = [{
   path: '',
@@ -32,7 +34,16 @@ const routes: Routes = [{
   },{
     path: 'report',
     component: ReportComponent,
-  }],
+  },
+  {
+    path: 'new-report',
+    component: NewReportComponent,
+  },
+  {
+    path: 'soft-doc',
+    component: SoftDocumentComponent,
+  }
+],
 }];
 
 @NgModule({
@@ -50,5 +61,7 @@ export const routedComponents = [
   MapComponent,
   ScanFormComponent,
   SearchComponent,
-  ReportComponent
+  ReportComponent,
+  NewReportComponent,
+  SoftDocumentComponent
 ];

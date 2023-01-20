@@ -4,7 +4,7 @@
     <nb-card-body>
       <form>
         <div class="form-group">
-          <label for="SN" class="label">S/N</label>
+          <label for="SN" class="label">SID</label>
           <input #sn="ngModel" (blur)="checkIfDocumentIdExists()" type="text" name="SN" [(ngModel)]="docInfo.documentId" nbInput fullWidth id="SN" placeholder="SN">
           <span style="color: red">{{ checkDocId }}</span>
         </div>
@@ -35,6 +35,7 @@
           <input nbInput
           id="date"
           name="date"
+          [(ngModel)]="docInfo.formDate"
                placeholder="Date"
                [nbDatepicker]="formpicker">
         <nb-datepicker #formpicker></nb-datepicker>

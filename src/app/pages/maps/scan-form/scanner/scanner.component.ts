@@ -1,6 +1,6 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Optional, Output } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import Dynamsoft from 'dwt';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
 import { ThumbnailViewer, ThumbnailViewerSettings, ViewMode } from 'dwt/dist/types/WebTwain.Viewer';
@@ -12,13 +12,17 @@ import { Device, DwtService } from '../../../../services/dwt.service';
   templateUrl: './scanner.component.html',
   styleUrls: ['./scanner.component.scss']
 })
-export class ScannerComponent implements OnInit {
+export class ScannerComponent implements OnInit,AfterViewInit {
 
   events: Observable<void>;
 
   documentSN: string;
   documentName: string;
+  documentDate: string;
   documentBase64String: string;
+
+  isDocumentUpdate: false;
+  DocumentUpdateFiles: FileList;
 
   /**
    * Variable that refer to the open modal dialog.
@@ -178,7 +182,7 @@ export class ScannerComponent implements OnInit {
     saveFileText: [],
     blobToShow: null
   }
-  constructor(protected dwtService: DwtService, private modalService: NgbModal,private dialogRef: NbDialogRef<any>) {
+  constructor(protected dwtService: DwtService, @Optional() public activeModal: NgbActiveModal, private modalService: NgbModal, @Optional() private dialogRef: NbDialogRef<any>) {
     this.initDWT();
     this.bMobile = this.dwtService.runningEnvironment.bMobile;
     this.OCRLanguages = this.dwtService.OCRLanguages;
@@ -283,6 +287,15 @@ export class ScannerComponent implements OnInit {
         }
       }
     );
+
+    
+  }
+
+  ngAfterViewInit(): void {
+    // for updating documents
+    // console.log(this.isDocumentUpdate);
+    // console.log(this.DocumentUpdateFiles);
+    // this.getExistingDocuments();
   }
   ngOnDestroy() {
     this.eventsSubscription.unsubscribe();
@@ -293,6 +306,17 @@ export class ScannerComponent implements OnInit {
       _ =>
         this.dwtService.unMountVideoContainer());
   }
+
+  // getExistingDocuments() {
+  //   this.dwtService.getDevices(false)
+  //   .then(result => { console.log(result); this.devices = result; this.showDevices = true; }, err => this.showMessage(err.message));
+  //   this.deviceName = "Choose...";
+  //   if(this.isDocumentUpdate){
+  //     this.load(this.DocumentUpdateFiles);
+  //     this.isDocumentUpdate = false;
+  //   }
+  // }
+
   clearMessage() {
     this.instantError = "";
   }
@@ -395,38 +419,41 @@ export class ScannerComponent implements OnInit {
 		// Remove the context menu which is still not functioning correctly.
 		this.DWObject.Viewer.off('imageRightClick');
     
-		// this.DWObject.Viewer.on('pageAreaSelected', (nImageIndex, rect) => {
-    //   console.log(nImageIndex, rect);
-		// 	if (rect.length > 0) {
-		// 		this.clearMessage();
-		// 		var currentRect = rect[rect.length - 1];
-		// 		if (rect.length > this.zones.length + 1) {
-		// 		  this.showMessage("Impossible Area selected!");
-		// 		  return;
-		// 		}
-		// 		if(rect.length == 1)
-		// 			this.zones = [];
-		// 		if (this.zones.length + 1 === rect.length){
-    //       console.log("zone 1");
-    //       this.zones.push(
-    //         { 
-    //           x: currentRect.x, 
-    //           y: currentRect.y, 
-    //           width: currentRect.x + currentRect.width, 
-    //           height: currentRect.y + currentRect.height, 
-    //           index: nImageIndex 
-    //         }
-    //       );
+    // crop document
+		this.DWObject.Viewer.on('pageAreaSelected', (nImageIndex, rect) => {
+      console.log(nImageIndex, rect);
+			if (rect.length > 0) {
+				this.clearMessage();
+				var currentRect = rect[rect.length - 1];
+				if (rect.length > this.zones.length + 1) {
+				  this.showMessage("Impossible Area selected!");
+				  return;
+				}
+				if(rect.length == 1)
+					this.zones = [];
+				if (this.zones.length + 1 === rect.length){
+          console.log("zone 1");
+          this.zones.push(
+            { 
+              x: currentRect.x, 
+              y: currentRect.y, 
+              width: currentRect.x + currentRect.width, 
+              height: currentRect.y + currentRect.height, 
+              index: nImageIndex 
+            }
+          );
           
-    //     }else{
-    //       console.log("zone 2");
-		// 		  this.zones.splice(rect.length - 1, 1, { x: currentRect.x, y: currentRect.y, width: currentRect.x + currentRect.width, height: currentRect.y + currentRect.height, index: nImageIndex });
-    //     }
-    //   }
-		// });
-      // this.DWObject.Viewer.on('OnImageAreaDeSelected', () => {
-      //   this.clearMessage(); this.zones = [];
-      // });
+        }else{
+          console.log("zone 2");
+				  this.zones.splice(rect.length - 1, 1, { x: currentRect.x, y: currentRect.y, width: currentRect.x + currentRect.width, height: currentRect.y + currentRect.height, index: nImageIndex });
+        }
+      }
+		});
+      this.DWObject.Viewer.on('OnImageAreaDeSelected', () => {
+        this.clearMessage(); this.zones = [];
+      });
+// end of crop document
+
       this.bMobile ? this.DWObject.Viewer.cursor = 'pointer' : this.DWObject.Viewer.cursor = 'crosshair';
       this.DWObject.Viewer.showPageNumber = true;
       //this.DWObject.Viewer.off('imageRightClick');
@@ -591,6 +618,10 @@ export class ScannerComponent implements OnInit {
         this.dwtService.getDevices(false)
           .then(result => { console.log(result); this.devices = result; this.showDevices = true; }, err => this.showMessage(err.message));
         this.deviceName = "Choose...";
+        if(this.isDocumentUpdate){
+          this.load(this.DocumentUpdateFiles);
+          this.isDocumentUpdate = false;
+        }
         break;
       case "barcode":
         if (!this.emptyBuffer)
@@ -614,6 +645,7 @@ export class ScannerComponent implements OnInit {
         break;
       default: break;
     }
+
   }
   closeModal(close: boolean) {
     if (this.modalRef === undefined) return;
@@ -667,9 +699,10 @@ export class ScannerComponent implements OnInit {
           this.clearMessage();
       }, err => this.showMessage(err));
   }
-  load() {
-    this.dwtService.load()
+  load(files?: FileList) {
+    this.dwtService.load(files)
       .then(() => {
+        console.log('close modal')
         this.closeModal(true);
         if (!this.emptyBuffer)
           console.log('empty');
@@ -770,15 +803,15 @@ export class ScannerComponent implements OnInit {
     if (!this.emptyBuffer)
       this.clearMessage();
     this.ocrResultString = "";
-    this.zones.push(
-      { 
-        x: 1201, 
-        y: 10, 
-        width: 1201 + 451, 
-        height: 10 + 276, 
-        index: 0 
-      }
-    );
+    // this.zones.push(
+    //   { 
+    //     x: 1201, 
+    //     y: 10, 
+    //     width: 1201 + 451, 
+    //     height: 10 + 276, 
+    //     index: 0 
+    //   }
+    // );
     this.filterZones();
     let ocrOptions = this.ocrProOptions;
     // let ocrOptions = this.ocrOptions;
@@ -809,6 +842,11 @@ export class ScannerComponent implements OnInit {
               //const nameRe = /Mr\w?\s\w+\s\w+/;
               const nameRe = /^(Mr|Ms|Mrs)?(\w+ )+\w+\s?/;
               const myArray = myRe.exec(this.ocrResultString);
+
+              // const dateRe = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/;
+
+              // const dateExp = dateRe.exec(this.ocrResultString);
+              //console.log(dateExp);
               if(myArray != null) {
                 console.log(myArray[0]);
                 this.documentSN = myArray[0];
@@ -821,6 +859,13 @@ export class ScannerComponent implements OnInit {
               } else {
                 this.documentName = "";
               }
+
+              // if(dateExp != null) {
+              //   console.log(dateExp[0]);
+              //   this.documentDate = dateExp[0];
+              // } else {
+              //   this.documentDate = "";
+              // }
               this.save();
               //console.log(myArray[0], this.ocrResultString.match(nameRe)[0]);
               break;
@@ -1131,6 +1176,18 @@ export class ScannerComponent implements OnInit {
     }
   }
   save() {
+    //openModal
+
+    // let preSelectedIndices = this.DWObject.SelectedImagesIndices;
+    // let count = this.DWObject.HowManyImagesInBuffer;
+    // for (let i = 0; i < count; i++)
+    //   this.saveOptions.indices.push({ number: i, selected: !!preSelectedIndices.find(o => { return o == i; }) });
+    
+    // end
+
+    this.saveOptions.multiPage = true;
+    this.handleMultiPageCheck();
+
     this.saveResults.uploadedFiles = [];
     this.saveResults.savedFiles = [];
     this.saveResults.base64String = [];
@@ -1146,15 +1203,17 @@ export class ScannerComponent implements OnInit {
             .then(base64String => {
               this.saveResults.base64String.push(base64String);
               this.saveResults.base64ButtonText.push("Copy Base64 String");
-              //console.log(base64String);
+              console.log(base64String);
+              console.log(this.saveResults.base64String);
               this.documentBase64String = base64String;
               const result = {
                 docName: this.documentName,
                 docSN: this.documentSN,
                 file: this.documentBase64String,
               }
-              this.dialogRef.close(result);
-              this.modalRef.close(result);
+              this.dialogRef?.close(result);
+              this.modalRef?.close(result);
+              this.activeModal?.close(result);
               this.clearMessage();
             }, err => this.showMessage(err));
    
