@@ -6,6 +6,9 @@ import { DocumentService } from '../../../services/document.service';
 import { DocumentInfo } from '../../../models/document-info.model';
 import { ToastService } from '../../../services/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from '../../../services/session.service';
+import { User } from '../../../models/user.model';
+import { Role } from '../../../models/role.enum';
 
 @Component({
   selector: 'app-search',
@@ -18,15 +21,20 @@ export class SearchComponent implements OnInit {
 
   loading = false;
 
+  user:User = new User()
+
   searchData = new SearchDocument;
 
   constructor(
+    private sessionService: SessionService,
     private toast: ToastService,
     private docService: DocumentService,
     private modalService: NgbModal,
     private dialogService: NbDialogService) {}
 
-  open(search: DocumentInfo[]) {
+  
+open(search: DocumentInfo[]) {
+  
     // this.dialogService.open(SearchResultComponent, {
     //   context: {
     //     title: 'Search Result',
@@ -39,9 +47,9 @@ export class SearchComponent implements OnInit {
     modalRef.componentInstance.title = 'Search Result';
     modalRef.componentInstance.docs = search;
   }
-
   
   ngOnInit() {
+    this.user = this.sessionService.getUserInfo();
   }
 
   dismiss() {
@@ -50,6 +58,11 @@ export class SearchComponent implements OnInit {
 
   search() {
     this.loading = true;
+
+    if(this.user.role == Role.Scan) {
+      this.searchData.userName = this.user.username;
+    }
+
     this.docService.searchDocument(this.searchData).subscribe(res => {
       this.loading = false;
       this.open(res.content)
